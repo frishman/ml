@@ -3,7 +3,10 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.ensemble import RandomForestClassifier
+from sklearn import svm
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.model_selection import cross_val_score
 import sys
 
 
@@ -16,32 +19,61 @@ class Learn:
         self.split = StratifiedShuffleSplit(n_splits=10, test_size=0.2, random_state=42)
         if method == "RandomForest":
             self.clf = RandomForestClassifier(n_estimators=500, max_leaf_nodes=16, n_jobs=-1)
+        elif method == "SVM":
+            self.clf = svm.SVC(kernel='linear')
+        elif method == "NeuralNetwork":
+            self.clf = MLPClassifier(
+                hidden_layer_sizes=(50,),
+                max_iter=15,
+                alpha=1e-4,
+                solver="sgd",
+                verbose=False,
+                random_state=1,
+                learning_rate_init=0.1
+            )
+
+            #self.clf = MLPClassifier(hidden_layer_sizes=(8, 8, 8), activation='relu', solver='adam', max_iter=500)
         else:
             print("Unknown classifier: ", method)
             sys.exit()
-        train_test(self)
+        self.score = self.train_test()
 
+    def train_test(self):
 
-def train_test(self):
-    count = 0
-    for train_index, test_index in self.split.split(self.df, self.df[self.tcolumn]):
-        strat_train_set = self.df.iloc[train_index]
-        strat_test_set = self.df.iloc[test_index]
-        X_train = strat_train_set[self.dcolumns].to_numpy()
-        y_train = strat_train_set[self.tcolumn].to_numpy()
-        X_test = strat_test_set[self.dcolumns].to_numpy()
-        y_test = strat_test_set[self.tcolumn].to_numpy()
+        score = cross_val_score(self.clf, self.df[self.dcolumns].to_numpy(), self.df[self.tcolumn].to_numpy(),
+                        cv=10)
+        return score.mean()
+    # print(cross_val_score(self.clf, self.df[self.dcolumns].to_numpy(), self.df[self.tcolumn].to_numpy(),
+    #                 cv=10, scoring="accuracy"))
+    # print(cross_val_score(self.clf, self.df[self.dcolumns].to_numpy(), self.df[self.tcolumn].to_numpy(),
+    #                 cv=10, scoring="accuracy"))
+    # print(cross_val_score(self.clf, self.df[self.dcolumns].to_numpy(), self.df[self.tcolumn].to_numpy(),
+    #                 cv=10, scoring="accuracy"))
 
-        self.clf.fit(X_train, y_train)
-        y_pred = self.clf.predict(X_test)
+    def get_score(self):
+        return self.score
 
-        print("Split =", count)
-        print(strat_test_set)
-        print(confusion_matrix(y_test, y_pred))
-        print(classification_report(y_test, y_pred))
-        print(accuracy_score(y_test, y_pred))
+    def train_test_alt(self):
+        count = 0
 
-        count = count + 1
+        for train_index, test_index in self.split.split(self.df, self.df[self.tcolumn]):
+            strat_train_set = self.df.iloc[train_index]
+            strat_test_set = self.df.iloc[test_index]
+            X_train = strat_train_set[self.dcolumns].to_numpy()
+            y_train = strat_train_set[self.tcolumn].to_numpy()
+            X_test = strat_test_set[self.dcolumns].to_numpy()
+            y_test = strat_test_set[self.tcolumn].to_numpy()
+
+            self.clf.fit(X_train, y_train)
+            y_pred = self.clf.predict(X_test)
+
+            print("Split =", count)
+            print(strat_test_set)
+            print(confusion_matrix(y_test, y_pred))
+            print(classification_report(y_test, y_pred))
+            print(accuracy_score(y_test, y_pred))
+
+            count = count + 1
 
 
 # def split_train_test(data, test_ratio):

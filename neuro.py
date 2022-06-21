@@ -8,10 +8,8 @@ from plot import scatter_dict
 from libr import impscale
 from libr import dict_append
 from sklearn.preprocessing import OrdinalEncoder
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import StratifiedShuffleSplit
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from learn import Learn
+from sklearn import datasets
 
 
 traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/0.Traits.csv"
@@ -30,7 +28,6 @@ nd_proteomics_data = (np.log2(nd_proteomics_data))
 
 nd_proteomics_data_all = nd_proteomics_data
 columns = list(set(nd_proteomics_data.columns.tolist()) & set(nd_clinical_data.index.tolist()))
-print(columns)
 nd_proteomics_data = nd_proteomics_data[columns]
 
 nd_proteomics_data = impscale(nd_proteomics_data)
@@ -52,22 +49,41 @@ nd_proteomics_data = nd_proteomics_data.T
 prot_columns = nd_proteomics_data.columns
 nd_proteomics_data = nd_proteomics_data.join(nd_clinical_data['Group'])
 
-print(nd_proteomics_data["Group"].value_counts())
 min_group_size = 15
 for g in nd_proteomics_data["Group"].unique():
     if len(nd_proteomics_data[nd_proteomics_data["Group"] == g]) < min_group_size:
         nd_proteomics_data.drop(nd_proteomics_data.index[nd_proteomics_data['Group'] == g], inplace=True)
 
 enc = OrdinalEncoder()
-print(nd_proteomics_data["Group"])
 nd_proteomics_data[["Group"]] = enc.fit_transform(nd_proteomics_data[["Group"]])
-print(nd_proteomics_data["Group"])
 
 
 
 #boxframe(nd_proteomics_data, 5, "/Users/frishman/Downloads/bx_gene.pdf")
 
-Learn(nd_proteomics_data, prot_columns, "Group", "RandomForest")
+# ln = Learn(nd_proteomics_data, prot_columns, "Group", "SVM")
+# print("SMV: ", ln.get_score())
+#
+# ln = Learn(nd_proteomics_data, prot_columns, "Group", "RandomForest")
+# print("Random Forest: ", ln.get_score())
+#
+# ln = Learn(nd_proteomics_data, prot_columns, "Group", "NeuralNetwork")
+# print("Neural Network: ", ln.get_score())
+
+iris = datasets.load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+columns = df.columns
+df["target"] = iris.target
+ln = Learn(df, columns, "target", "SVM")
+print("SMV: ", ln.get_score())
+ln = Learn(df, columns, "target", "RandomForest")
+print("Random Forest: ", ln.get_score())
+ln = Learn(df, columns, "target", "NeuralNetwork")
+print("Neural network: ", ln.get_score())
+
+
+
+
 
 
 
