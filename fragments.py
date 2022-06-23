@@ -35,3 +35,15 @@ row = [
      0.6975331, 0.26076035]]
 yhat = model.predict(row)
 print('Predicted Class: %d' % yhat[0])
+
+
+iris = datasets.load_iris()
+df = pd.DataFrame(iris.data, columns=iris.feature_names)
+columns = df.columns
+df["target"] = iris.target
+ln = Learn(df, columns, "target", "SVM")
+print("SMV: ", ln.get_score())
+ln = Learn(df, columns, "target", "RandomForest")
+print("Random Forest: ", ln.get_score())
+ln = Learn(df, columns, "target", "NeuralNetwork")
+print("Neural network: ", ln.get_score())
