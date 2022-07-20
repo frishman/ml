@@ -46,7 +46,7 @@ def run_learn(prot_file: str, prot_index: str, traits_file: str, traits_index:st
     proteomics_data = proteomics_data.T
     prot_columns = proteomics_data.columns
     joint = proteomics_data.join(clinical_data)
-    joint.to_excel(excel_file)
+    # joint.to_excel(excel_file)
 
     proteomics_data = proteomics_data.join(clinical_data[group])
 
@@ -61,9 +61,7 @@ def run_learn(prot_file: str, prot_index: str, traits_file: str, traits_index:st
     # boxframe(nd_proteomics_data, 5, "/Users/frishman/Downloads/bx_gene.pdf")
 
     ln = Learn(proteomics_data, prot_columns, group, "RandomForest")
-    print("Random Forest: ", ln.get_score())
-    ln = Learn(proteomics_data, prot_columns, group, "SVM")
-    print("SVM: ", ln.get_score())
+#    ln = Learn(proteomics_data, prot_columns, group, "SVM")
 
 
 def run_pca(prot: pd.DataFrame, clin: pd.DataFrame, pcatxt: str, pcapdf: str):
