@@ -18,10 +18,9 @@ class Learn:
         self.df = df
         self.dcolumns = dcolumns
         self.tcolumn = tcolumn
-        self.nsplits = 2
+        self.nsplits = 5
         self.split = StratifiedShuffleSplit(n_splits=self.nsplits, test_size=0.2, random_state=42)
         if method == "RandomForest":
-            #self.clf = RandomForestClassifier(n_estimators=100, max_leaf_nodes=5, n_jobs=-1)
             self.clf = RandomForestClassifier(n_jobs=-1)
         elif method == "SVM":
             self.clf = svm.SVC(kernel='linear')
@@ -78,7 +77,7 @@ class Learn:
                        'min_samples_leaf': min_samples_leaf,
                        'bootstrap': bootstrap}
 
-        rf_random = RandomizedSearchCV(estimator=self.clf, param_distributions=random_grid, n_iter=5, cv=3, verbose=0,
+        rf_random = RandomizedSearchCV(estimator=self.clf, param_distributions=random_grid, n_iter=100, cv=5, verbose=0,
                                        random_state=42, n_jobs=-1)
         rf_random.fit(x_train, y_train)
         #print(rf_random.best_params_)
@@ -112,15 +111,10 @@ class Learn:
                 feat[p].append(imp.iloc[i]['col_name'])
 
         print()
-        count = 1
         for p in feat.keys():
             if len(feat[p]) == self.nsplits:
                 p = re.sub('[^\\|]*\\|', '', p)
-                if count % 10 == 0:
-                    print(p)
-                else:
-                    print(p + " ", end=" ")
-                count += 1
+                print("FEATURE " + p)
         print('\n\n')
 
 
