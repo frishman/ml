@@ -6,7 +6,6 @@ from pca import DoPCA
 from plot import scatter_dict
 from libr import impscale
 from libr import dict_append
-from sklearn.preprocessing import OrdinalEncoder
 from learn import Learn
 
 
@@ -30,6 +29,7 @@ def preprocess_nd(df):
 def run_learn(prot_file: str, prot_index: str, traits_file: str, traits_index:str, excel_file: str, group: str):
     clinical_data = pd.read_csv(traits_file, index_col=traits_index)
     clinical_data = preprocess_nd(clinical_data)
+    clinical_data = clinical_data.dropna(how='any')
 
     proteomics_data = pd.read_csv(prot_file, index_col=prot_index)
     proteomics_data = proteomics_data.dropna(how='all', axis=1)

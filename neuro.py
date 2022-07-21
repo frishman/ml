@@ -1,41 +1,41 @@
 
 from neuro_process import run_learn
 
-# print("UPenn")
-# upenn_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/0.Traits.csv"
-# upenn_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
-# upenn_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/upenn_joint.xlsx"
-# run_learn(upenn_proteomics_file, 'Unnamed: 0', upenn_traits_file, 'MaxQuant ID', upenn_excel_file, "Group")
-#
-# print("Mayo")
-# mayo_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/0.Traits.csv"
-# mayo_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
-# mayo_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/mayo_joint.xlsx"
-# run_learn(mayo_proteomics_file, 'Unnamed: 0', mayo_traits_file, 'SampleID', mayo_excel_file, "Diagnosis")
-#
-# print("CSF 298")
-# csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/0.Traits.csv"
-# csf_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/2.Unregressed_Batch-corrected_PD-normalized_TMT_reporter_abundance.csv"
-# csf_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/csf_298_joint.xlsx"
-# run_learn(csf_proteomics_file, 'Unnamed: 0', csf_traits_file, 'SampleID', csf_excel_file, "Group")
-#
-# print("CSF 298 clean")
-# csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/0.Traits.csv"
-# csf_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/2b.Unregressed_Batch-corrected_cleanDat.csv"
-# csf_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/csf_298_joint_clean.xlsx"
-# run_learn(csf_proteomics_file, 'Unnamed: 0', csf_traits_file, 'SampleID', csf_excel_file, "Group")
-#
-# print("CSF 96")
-# csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_2_96-sample_biomarker_defined_Asymptomatic_AD_Symptomatic_AD_and_Controls/data/0.Traits.csv"
-# csf_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_2_96-sample_biomarker_defined_Asymptomatic_AD_Symptomatic_AD_and_Controls/data/2.Unregressed_Batch-corrected_PD-TMT_reporter_abundance.csv"
-# csf_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/csf_96_joint.xlsx"
-# run_learn(csf_proteomics_file, 'Unnamed: 0', csf_traits_file, 'batch.channel', csf_excel_file, "ClinicalGroup")
-#
-# print("CSF 96 clean")
-# csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_2_96-sample_biomarker_defined_Asymptomatic_AD_Symptomatic_AD_and_Controls/data/0.Traits.csv"
-# csf_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_2_96-sample_biomarker_defined_Asymptomatic_AD_Symptomatic_AD_and_Controls/data/2b.unregressed_Batch-corrected_cleanDat.csv"
-# csf_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/csf_96_joint_clean.xlsx"
-# run_learn(csf_proteomics_file, 'Unnamed: 0', csf_traits_file, 'batch.channel', csf_excel_file, "ClinicalGroup")
+print("UPenn")
+upenn_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/0.Traits.csv"
+upenn_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
+upenn_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/upenn_joint.xlsx"
+run_learn(upenn_proteomics_file, 'Unnamed: 0', upenn_traits_file, 'MaxQuant ID', upenn_excel_file, "Group")
+
+print("Mayo")
+mayo_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/0.Traits.csv"
+mayo_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
+mayo_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/mayo_joint.xlsx"
+run_learn(mayo_proteomics_file, 'Unnamed: 0', mayo_traits_file, 'SampleID', mayo_excel_file, "Diagnosis")
+
+print("CSF 298")
+csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/0.Traits.csv"
+csf_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/2.Unregressed_Batch-corrected_PD-normalized_TMT_reporter_abundance.csv"
+csf_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/csf_298_joint.xlsx"
+run_learn(csf_proteomics_file, 'Unnamed: 0', csf_traits_file, 'SampleID', csf_excel_file, "Group")
+
+print("CSF 298 clean")
+csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/0.Traits.csv"
+csf_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/2b.Unregressed_Batch-corrected_cleanDat.csv"
+csf_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/csf_298_joint_clean.xlsx"
+run_learn(csf_proteomics_file, 'Unnamed: 0', csf_traits_file, 'SampleID', csf_excel_file, "Group")
+
+print("CSF 96")
+csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_2_96-sample_biomarker_defined_Asymptomatic_AD_Symptomatic_AD_and_Controls/data/0.Traits.csv"
+csf_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_2_96-sample_biomarker_defined_Asymptomatic_AD_Symptomatic_AD_and_Controls/data/2.Unregressed_Batch-corrected_PD-TMT_reporter_abundance.csv"
+csf_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/csf_96_joint.xlsx"
+run_learn(csf_proteomics_file, 'Unnamed: 0', csf_traits_file, 'batch.channel', csf_excel_file, "ClinicalGroup")
+
+print("CSF 96 clean")
+csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_2_96-sample_biomarker_defined_Asymptomatic_AD_Symptomatic_AD_and_Controls/data/0.Traits.csv"
+csf_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_2_96-sample_biomarker_defined_Asymptomatic_AD_Symptomatic_AD_and_Controls/data/2b.unregressed_Batch-corrected_cleanDat.csv"
+csf_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/csf_96_joint_clean.xlsx"
+run_learn(csf_proteomics_file, 'Unnamed: 0', csf_traits_file, 'batch.channel', csf_excel_file, "ClinicalGroup")
 
 #Age, regression
 # aging_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Aging/data/0.Traits.csv"
