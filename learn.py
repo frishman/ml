@@ -17,7 +17,7 @@ from sklearn.metrics import precision_recall_fscore_support
 from sklearn.metrics import balanced_accuracy_score
 from sklearn.model_selection import GridSearchCV
 from sklearn.model_selection import RandomizedSearchCV
-import pprint
+from pprint import pprint
 import shap
 
 
@@ -26,13 +26,14 @@ class Learn:
         self.df = df
         self.dcolumns = dcolumns
         self.tcolumn = tcolumn
-        self.split = StratifiedShuffleSplit(n_splits=5, test_size=0.1, random_state=42)
+        self.split = StratifiedShuffleSplit(n_splits=5, test_size=0.5, random_state=42)
         if method == "RandomForest":
             self.clf = RandomForestClassifier(n_estimators=100, max_leaf_nodes=5, n_jobs=-1)
         elif method == "SVM":
             self.clf = svm.SVC(kernel='linear')
         elif method == "NeuralNetwork":
             self.clf = MLPClassifier(
+            #self.clf = MLPClassifier(hidden_layer_sizes=(8, 8, 8), activation='relu', solver='adam', max_iter=500)
                 hidden_layer_sizes=(50,),
                 max_iter=15,
                 alpha=1e-4,
@@ -41,8 +42,6 @@ class Learn:
                 random_state=1,
                 learning_rate_init=0.1
             )
-
-            #self.clf = MLPClassifier(hidden_layer_sizes=(8, 8, 8), activation='relu', solver='adam', max_iter=500)
         else:
             print("Unknown classifier: ", method)
             sys.exit()
@@ -64,11 +63,12 @@ class Learn:
         print("Confusion matrix")
         print(confusion_matrix(known, pred), '\n')
 
-    def opt_hyper_rf(self, x_train, y_train, x_test, y_test):
+    def opt_hyper_rf(self, x_train, y_train):
+
         n_estimators = [int(x) for x in np.linspace(start=20, stop=2000, num=15)]
         min_samples_leaf = [1, 2, 4]
         min_samples_split = [2, 5, 10]
-        max_depth = [int(x) for x in np.linspace(1, 15, num=10)]
+        max_depth = [int(x) for x in np.linspace(start=1, stop=15, num=10)]
         max_depth.append(None)
         bootstrap = [True, False]
 
@@ -80,9 +80,8 @@ class Learn:
 
         rf_random = RandomizedSearchCV(estimator=self.clf, param_distributions=random_grid, n_iter=100, cv=3, verbose=1,
                                        random_state=42, n_jobs=-1)
-        # Fit the random search model
         rf_random.fit(x_train, y_train)
-        print(rf_random.best_params_)
+        #print(rf_random.best_params_)
         best_grid = rf_random.best_estimator_
         return best_grid
 
@@ -111,7 +110,7 @@ class Learn:
             print(pd.DataFrame(y_train_over).value_counts().to_string(), '\n')
             X_test = strat_test_set[self.dcolumns].to_numpy()
             y_test = strat_test_set[self.tcolumn].to_numpy()
-            best_clf = self.opt_hyper_rf(X_train_over, y_train_over, X_test, y_test)
+            best_clf = self.opt_hyper_rf(X_train_over, y_train_over)
             self.clf.fit(X_train_over, y_train_over)
 
             y_pred = self.clf.predict(X_test)

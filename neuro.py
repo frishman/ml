@@ -7,11 +7,11 @@ from neuro_process import run_learn
 # upenn_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/upenn_joint.xlsx"
 # run_learn(upenn_proteomics_file, 'Unnamed: 0', upenn_traits_file, 'MaxQuant ID', upenn_excel_file, "Group")
 #
-print("Mayo")
-mayo_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/0.Traits.csv"
-mayo_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
-mayo_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/mayo_joint.xlsx"
-run_learn(mayo_proteomics_file, 'Unnamed: 0', mayo_traits_file, 'SampleID', mayo_excel_file, "Diagnosis")
+# print("Mayo")
+# mayo_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/0.Traits.csv"
+# mayo_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
+# mayo_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/mayo_joint.xlsx"
+# run_learn(mayo_proteomics_file, 'Unnamed: 0', mayo_traits_file, 'SampleID', mayo_excel_file, "Diagnosis")
 #
 # print("CSF 298")
 # csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/0.Traits.csv"
@@ -43,11 +43,11 @@ run_learn(mayo_proteomics_file, 'Unnamed: 0', mayo_traits_file, 'SampleID', mayo
 # aging_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/aging_joint.xlsx"
 # run_learn(aging_proteomics_file, 'Unnamed: 0', aging_traits_file, 'batch.channel', aging_excel_file, "ClinicalGroup")
 
-# print("Consensus")
-# consensus_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Consensus/data/0.Traits.csv"
-# consensus_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Consensus/data/2.Minimally_regressed_Batch_and_Site-corrected_LFQ_intensity.csv"
-# consensus_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/consensus_joint.xlsx"
-# run_learn(consensus_proteomics_file, 'Unnamed: 0', consensus_traits_file, 'Unnamed: 0', consensus_excel_file, "Group")
+print("Consensus")
+consensus_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Consensus/data/0.Traits.csv"
+consensus_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Consensus/data/2.Minimally_regressed_Batch_and_Site-corrected_LFQ_intensity.csv"
+consensus_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/consensus_joint.xlsx"
+run_learn(consensus_proteomics_file, 'Unnamed: 0', consensus_traits_file, 'Unnamed: 0', consensus_excel_file, "Group")
 
 
 
