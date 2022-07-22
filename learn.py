@@ -18,13 +18,14 @@ class Learn:
         self.df = df
         self.dcolumns = dcolumns
         self.tcolumn = tcolumn
+        self.method = method
         self.nsplits = 5
         self.split = StratifiedShuffleSplit(n_splits=self.nsplits, test_size=0.2, random_state=42)
-        if method == "RandomForest":
+        if self.method == "RandomForest":
             self.clf = RandomForestClassifier(n_jobs=-1)
-        elif method == "SVM":
+        elif self.method == "SVM":
             self.clf = svm.SVC(kernel='linear')
-        elif method == "NeuralNetwork":
+        elif self.method == "NeuralNetwork":
             self.clf = MLPClassifier(
             #self.clf = MLPClassifier(hidden_layer_sizes=(8, 8, 8), activation='relu', solver='adam', max_iter=500)
                 hidden_layer_sizes=(50,),
@@ -84,6 +85,19 @@ class Learn:
         best_grid = rf_random.best_estimator_
         return best_grid
 
+    def opt_hyper_svm(self, x_train, y_train):
+
+        random_grid = {'C': [0.1, 1, 10, 100, 1000],
+                      'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+                      'kernel': ['rbf']}
+
+        rf_random = RandomizedSearchCV(estimator=self.clf, param_distributions=random_grid, n_iter=100, cv=5, verbose=0,
+                                       random_state=42, n_jobs=-1)
+        rf_random.fit(x_train, y_train)
+        #print(rf_random.best_params_)
+        best_grid = rf_random.best_estimator_
+        return best_grid
+
     def train_test(self):
 
         original_counts = self.df[self.tcolumn].value_counts().to_dict()
@@ -100,7 +114,10 @@ class Learn:
             train_counts_over = dict(zip(unique, counts))
             X_test = strat_test_set[self.dcolumns].to_numpy()
             y_test = strat_test_set[self.tcolumn].to_numpy()
-            best_clf = self.opt_hyper_rf(X_train_over, y_train_over)
+            if(self.method == "RandomForest"):
+                best_clf = self.opt_hyper_rf(X_train_over, y_train_over)
+            elif (self.method == "SVM"):
+                best_clf = self.opt_hyper_svm(X_train_over, y_train_over)
             y_pred = best_clf.predict(X_test)
             self.metr(y_test, y_pred, original_counts, train_counts, train_counts_over)
             imp = pd.DataFrame({'col_name': best_clf.feature_importances_}, self.dcolumns).sort_values(by='col_name', ascending=False).head(50)
