@@ -5,12 +5,14 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import svm
 from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.metrics import confusion_matrix, accuracy_score
 import sys
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.model_selection import RandomizedSearchCV
+from sklearn.inspection import permutation_importance
 import re
-#import shap
+import shap
+import matplotlib.pyplot as plt
 
 
 class Learn:
@@ -19,23 +21,14 @@ class Learn:
         self.dcolumns = dcolumns
         self.tcolumn = tcolumn
         self.method = method
-        self.nsplits = 5
+        self.nsplits = 1
         self.split = StratifiedShuffleSplit(n_splits=self.nsplits, test_size=0.2, random_state=42)
         if self.method == "RandomForest":
-            self.clf = RandomForestClassifier(n_jobs=-1)
+            self.clf = RandomForestClassifier()
         elif self.method == "SVM":
-            self.clf = svm.SVC(kernel='linear')
+            self.clf = svm.SVC()
         elif self.method == "NeuralNetwork":
-            self.clf = MLPClassifier(
-            #self.clf = MLPClassifier(hidden_layer_sizes=(8, 8, 8), activation='relu', solver='adam', max_iter=500)
-                hidden_layer_sizes=(50,),
-                max_iter=15,
-                alpha=1e-4,
-                solver="sgd",
-                verbose=False,
-                random_state=1,
-                learning_rate_init=0.1
-            )
+            self.clf = MLPClassifier()
         else:
             print("Unknown classifier: ", method)
             sys.exit()
@@ -63,45 +56,59 @@ class Learn:
                   f'{fscore[i]:10.2f}', "\t", f'{support[i]:10.2f}', "\t", '%10i' %  confus[i][i], "\t", '%10i' %  wrong)
 
 
-    def opt_hyper_rf(self, x_train, y_train):
+    def opt_hyper(self, x_train, y_train):
 
-        n_estimators = [int(x) for x in np.linspace(start=20, stop=2000, num=15)]
-        min_samples_leaf = [1, 2, 4]
-        min_samples_split = [2, 5, 10]
-        max_depth = [int(x) for x in np.linspace(start=1, stop=15, num=10)]
-        max_depth.append(None)
-        bootstrap = [True, False]
+        if self.method == "RandomForest":
+            n_iter = 100
+            random_grid = {'n_estimators': [int(x) for x in np.linspace(start=20, stop=2000, num=15)],
+                           'max_depth': [int(x) for x in np.linspace(start=1, stop=15, num=10)] + [None],
+                           'min_samples_split': [2, 5, 10],
+                           'min_samples_leaf': [1, 2, 4],
+                           'bootstrap': [True, False]}
+        elif self.method == "SVM":
+            n_iter = 20
+            random_grid = {'C': [0.1, 1, 10, 100, 1000],
+                           'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
+                           'kernel': ['rbf']}
+        elif self.method == "NeuralNetwork":
+            n_iter = 100
+            random_grid = {
+                'hidden_layer_sizes': [(10, 30, 10), (20,)],
+                'activation': ['tanh', 'relu'],
+                'solver': ['sgd', 'adam'],
+                'alpha': [0.0001, 0.05],
+                'learning_rate': ['constant', 'adaptive'],
+            }
 
-        random_grid = {'n_estimators': n_estimators,
-                       'max_depth': max_depth,
-                       'min_samples_split': min_samples_split,
-                       'min_samples_leaf': min_samples_leaf,
-                       'bootstrap': bootstrap}
-
-        rf_random = RandomizedSearchCV(estimator=self.clf, param_distributions=random_grid, n_iter=100, cv=5, verbose=0,
+        random = RandomizedSearchCV(estimator=self.clf, param_distributions=random_grid, n_iter=n_iter, cv=5, verbose=0,
                                        random_state=42, n_jobs=-1)
-        rf_random.fit(x_train, y_train)
-        #print(rf_random.best_params_)
-        best_grid = rf_random.best_estimator_
+        random.fit(x_train, y_train)
+        best_grid = random.best_estimator_
         return best_grid
 
-    def opt_hyper_svm(self, x_train, y_train):
+    def run_permutation(self, clf, x_train, y_train):
+        feat = dict()
+        perm_importance = permutation_importance(clf, x_train, y_train, n_repeats=10,
+                                                 random_state=42, n_jobs=-1)
+        sorted_importances_idx = perm_importance.importances_mean.argsort()
+        test_importances = pd.DataFrame(perm_importance.importances[sorted_importances_idx],
+                                        self.dcolumns[sorted_importances_idx]).tail(50)
+        for i in range(len(test_importances)):
+            p = test_importances.index[i]
+            if p not in feat:
+                feat[p] = list()
+            feat[p].append(test_importances.iloc[i].iat[0])
 
-        random_grid = {'C': [0.1, 1, 10, 100, 1000],
-                      'gamma': [1, 0.1, 0.01, 0.001, 0.0001],
-                      'kernel': ['rbf']}
-
-        rf_random = RandomizedSearchCV(estimator=self.clf, param_distributions=random_grid, n_iter=100, cv=5, verbose=0,
-                                       random_state=42, n_jobs=-1)
-        rf_random.fit(x_train, y_train)
-        #print(rf_random.best_params_)
-        best_grid = rf_random.best_estimator_
-        return best_grid
+        print('\n')
+        for p in feat.keys():
+            if len(feat[p]) == self.nsplits:
+                pp = re.sub('[^\\|]*\\|', '', p)
+                print("FEATURE " + pp, " ", feat[p])
+        print('\n')
 
     def train_test(self):
 
         original_counts = self.df[self.tcolumn].value_counts().to_dict()
-        feat = dict()
         for train_index, test_index in self.split.split(self.df, self.df[self.tcolumn]):
             strat_train_set = self.df.iloc[train_index]
             strat_test_set = self.df.iloc[test_index]
@@ -114,32 +121,17 @@ class Learn:
             train_counts_over = dict(zip(unique, counts))
             X_test = strat_test_set[self.dcolumns].to_numpy()
             y_test = strat_test_set[self.tcolumn].to_numpy()
-            if(self.method == "RandomForest"):
-                best_clf = self.opt_hyper_rf(X_train_over, y_train_over)
-            elif (self.method == "SVM"):
-                best_clf = self.opt_hyper_svm(X_train_over, y_train_over)
+            best_clf = self.opt_hyper(X_train_over, y_train_over)
             y_pred = best_clf.predict(X_test)
             self.metr(y_test, y_pred, original_counts, train_counts, train_counts_over)
-            imp = pd.DataFrame({'col_name': best_clf.feature_importances_}, self.dcolumns).sort_values(by='col_name', ascending=False).head(50)
-            for i in range(len(imp.index)):
-                p = imp.index[i]
-                if p not in feat:
-                    feat[p] = list()
-                feat[p].append(imp.iloc[i]['col_name'])
-
-        print()
-        for p in feat.keys():
-            if len(feat[p]) == self.nsplits:
-                p = re.sub('[^\\|]*\\|', '', p)
-                print("FEATURE " + p)
-        print('\n\n')
 
 
-
-        # explainer = shap.TreeExplainer(self.clf)
-        # shap_values = explainer.shap_values(X_test)
-        # print(shap_values)
-        # shap.summary_plot(shap_values, X_test, plot_type="bar")
+        explainer = shap.TreeExplainer(best_clf)
+        shap_values = explainer.shap_values(X_test)
+        print(shap_values)
+        shap.summary_plot(shap_values, X_test, plot_type="bar", feature_names=self.dcolumns)
+        # fig = shap.summary_plot(shap_values, train, show=False)
+        # plt.savefig('shap.png')
 
 
 

@@ -8,7 +8,6 @@ from libr import impscale
 from libr import dict_append
 from learn import Learn
 
-
 def preprocess_nd(df):
 
     for c in df.columns:
@@ -60,8 +59,7 @@ def run_learn(prot_file: str, prot_index: str, traits_file: str, traits_index:st
 
     # boxframe(nd_proteomics_data, 5, "/Users/frishman/Downloads/bx_gene.pdf")
 
-    ln = Learn(proteomics_data, prot_columns, group, "SVM")
-#    ln = Learn(proteomics_data, prot_columns, group, "SVM")
+    Learn(proteomics_data, prot_columns, group, "RandomForest")
 
 
 def run_pca(prot: pd.DataFrame, clin: pd.DataFrame, pcatxt: str, pcapdf: str):

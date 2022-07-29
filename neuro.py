@@ -1,17 +1,17 @@
 
 from neuro_process import run_learn
 
-print("Dataset UPenn")
-upenn_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/0.Traits.csv"
-upenn_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
-upenn_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/upenn_joint.xlsx"
-run_learn(upenn_proteomics_file, 'Unnamed: 0', upenn_traits_file, 'MaxQuant ID', upenn_excel_file, "Group")
-
-print("Dataset Mayo")
-mayo_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/0.Traits.csv"
-mayo_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
-mayo_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/mayo_joint.xlsx"
-run_learn(mayo_proteomics_file, 'Unnamed: 0', mayo_traits_file, 'SampleID', mayo_excel_file, "Diagnosis")
+# print("Dataset UPenn")
+# upenn_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/0.Traits.csv"
+# upenn_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
+# upenn_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/upenn_joint.xlsx"
+# run_learn(upenn_proteomics_file, 'Unnamed: 0', upenn_traits_file, 'MaxQuant ID', upenn_excel_file, "Group")
+#
+# print("Dataset Mayo")
+# mayo_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/0.Traits.csv"
+# mayo_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
+# mayo_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/mayo_joint.xlsx"
+# run_learn(mayo_proteomics_file, 'Unnamed: 0', mayo_traits_file, 'SampleID', mayo_excel_file, "Diagnosis")
 
 print("Dataset CSF 298")
 csf_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/CSF/Cohort_1_298-sample_FNIH_Symptomatic_AD_and_Controls/data/0.Traits.csv"
