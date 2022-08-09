@@ -1,4 +1,5 @@
-import pandas as pd
+import sys
+
 import numpy as np
 from imblearn.over_sampling import SMOTE
 from sklearn.model_selection import StratifiedShuffleSplit
@@ -6,23 +7,25 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn import svm
 from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import confusion_matrix, accuracy_score
-import sys
 from sklearn.metrics import precision_recall_fscore_support
 from sklearn.model_selection import RandomizedSearchCV
-from sklearn.inspection import permutation_importance
 import re
 import shap
-import matplotlib.pyplot as plt
-
+import libr
 
 class Learn:
-    def __init__(self, df: pd.DataFrame, dcolumns: list(), tcolumn: str, method: str) -> None:
-        self.df = df
-        self.dcolumns = dcolumns
-        self.tcolumn = tcolumn
+    def __init__(self, X, y, method) -> None:
         self.method = method
         self.nsplits = 1
         self.split = StratifiedShuffleSplit(n_splits=self.nsplits, test_size=0.2, random_state=42)
+        self.set_method()
+        self.feature_names = list(X.columns)
+        self.train_test(X, y)
+
+    def get_score(self):
+        return self.score
+
+    def set_method(self):
         if self.method == "RandomForest":
             self.clf = RandomForestClassifier()
         elif self.method == "SVM":
@@ -30,12 +33,8 @@ class Learn:
         elif self.method == "NeuralNetwork":
             self.clf = MLPClassifier()
         else:
-            print("Unknown classifier: ", method)
-            sys.exit()
-        self.train_test()
-
-    def get_score(self):
-        return self.score
+            supported_methods = ["RandomForest", "SVM", "NeuralNetwork"]
+            raise ValueError(f"'method' should be one of following: {supported_methods}")
 
     def metr(self, known: np.array, pred: np.array, original_counts: dict, train_counts: dict,
              train_counts_oversampled: dict):
@@ -86,58 +85,75 @@ class Learn:
         best_grid = random.best_estimator_
         return best_grid
 
-    def run_permutation(self, clf, x_train, y_train):
-        feat = dict()
-        perm_importance = permutation_importance(clf, x_train, y_train, n_repeats=10,
-                                                 random_state=42, n_jobs=-1)
-        sorted_importances_idx = perm_importance.importances_mean.argsort()
-        test_importances = pd.DataFrame(perm_importance.importances[sorted_importances_idx],
-                                        self.dcolumns[sorted_importances_idx]).tail(50)
-        for i in range(len(test_importances)):
-            p = test_importances.index[i]
-            if p not in feat:
-                feat[p] = list()
-            feat[p].append(test_importances.iloc[i].iat[0])
+    # def run_permutation(self, clf, x_train, y_train):
+    #     feat = dict()
+    #     perm_importance = permutation_importance(clf, x_train, y_train, n_repeats=10,
+    #                                              random_state=42, n_jobs=-1)
+    #     sorted_importances_idx = perm_importance.importances_mean.argsort()
+    #     test_importances = pd.DataFrame(perm_importance.importances[sorted_importances_idx],
+    #                                     self.dcolumns[sorted_importances_idx]).tail(50)
+    #     for i in range(len(test_importances)):
+    #         p = test_importances.index[i]
+    #         if p not in feat:
+    #             feat[p] = list()
+    #         feat[p].append(test_importances.iloc[i].iat[0])
+    #
+    #     print('\n')
+    #     for p in feat.keys():
+    #         if len(feat[p]) == self.nsplits:
+    #             pp = re.sub('[^\\|]*\\|', '', p)
+    #             print("FEATURE " + pp, " ", feat[p])
+    #     print('\n')
 
-        print('\n')
-        for p in feat.keys():
-            if len(feat[p]) == self.nsplits:
-                pp = re.sub('[^\\|]*\\|', '', p)
-                print("FEATURE " + pp, " ", feat[p])
-        print('\n')
+    def explain(self, clf, x):
 
-    def train_test(self):
+        if self.method == "RandomForest":
+            explainer = shap.TreeExplainer(clf, x)
+        elif self.method == "SVM":
+            explainer = shap.KernelExplainer(clf, x)
+        elif self.method == "NeuralNetwork":
+            explainer = shap.Explainer(clf, x)
+        shap_values = explainer.shap_values(x)
+        importances = dict()
+        feature_names = list(x.columns)
+        for s in shap_values:
+            for i in range(s.shape[1]):
+                if feature_names[i] not in importances:
+                    importances[feature_names[i]] = np.mean(np.abs(s[:, i]))
+                else:
+                    importances[feature_names[i]] = importances[feature_names[i]] + np.mean(np.abs(s[:, i]))
 
-        original_counts = self.df[self.tcolumn].value_counts().to_dict()
-        for train_index, test_index in self.split.split(self.df, self.df[self.tcolumn]):
-            strat_train_set = self.df.iloc[train_index]
-            strat_test_set = self.df.iloc[test_index]
-            X_train = strat_train_set[self.dcolumns].to_numpy()
-            y_train = strat_train_set[self.tcolumn].to_numpy()
-            train_counts = strat_train_set[self.tcolumn].value_counts().to_dict()
+#        shap.summary_plot(shap_values, x, plot_type="bar", feature_names=self.dcolumns)
+        return importances
+
+    def train_test(self, X, y):
+
+        importances_splits = dict()
+        original_counts = libr.array_counts(y)
+        for train_index, test_index in self.split.split(X, y):
+            X_train, X_test = X.iloc[train_index].to_numpy(), X.iloc[test_index].to_numpy()
+            y_train, y_test = y.iloc[train_index].to_numpy(), y.iloc[test_index].to_numpy()
             oversample = SMOTE()
             X_train_over, y_train_over = oversample.fit_resample(X_train, y_train)
-            unique, counts = np.unique(y_train_over, return_counts=True)
-            train_counts_over = dict(zip(unique, counts))
-            X_test = strat_test_set[self.dcolumns].to_numpy()
-            y_test = strat_test_set[self.tcolumn].to_numpy()
+            train_counts = libr.array_counts(y_train)
+            train_counts_over = libr.array_counts(y_train_over)
             best_clf = self.opt_hyper(X_train_over, y_train_over)
             y_pred = best_clf.predict(X_test)
             self.metr(y_test, y_pred, original_counts, train_counts, train_counts_over)
+            importances = self.explain(best_clf, X.iloc[test_index])
+            for p in importances.keys():
+                if p not in importances_splits.keys():
+                    importances_splits[p] = importances[p]
+                else:
+                    importances_splits[p] = importances_splits[p] + importances[p]
 
-
-        explainer = shap.TreeExplainer(best_clf)
-        shap_values = explainer.shap_values(X_test)
-        print(shap_values)
-        shap.summary_plot(shap_values, X_test, plot_type="bar", feature_names=self.dcolumns)
-        # fig = shap.summary_plot(shap_values, train, show=False)
-        # plt.savefig('shap.png')
-
-
-
-
-
-
-
-
-
+        importances_values = np.array(list(importances_splits.values()))
+        importances_idx = np.argsort(importances_values)
+        #sorted_importance_values = importances_values[importances_idx][-20:]
+        #print(sorted_importance_values)
+        protein_ids = np.array(self.feature_names)[importances_idx][-20:]
+        print()
+        for p in protein_ids:
+            p = re.sub('[^\\|]*\\|', '', p)
+            print("FEATURE " + p)
+        print()

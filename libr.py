@@ -1,5 +1,6 @@
 import sys
 
+import numpy as np
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.impute import SimpleImputer
@@ -20,3 +21,7 @@ def dict_append(dct, key, val):
     if key not in dct:
         dct[key] = list()
     dct[key].append(val)
+
+def array_counts(ar: np.array):
+    unique, counts = np.unique(ar, return_counts=True)
+    return dict(zip(unique, counts))

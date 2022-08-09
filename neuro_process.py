@@ -7,6 +7,9 @@ from plot import scatter_dict
 from libr import impscale
 from libr import dict_append
 from learn import Learn
+import anndata
+import scanpy as sc
+
 
 def preprocess_nd(df):
 
@@ -25,7 +28,8 @@ def preprocess_nd(df):
     return df
 
 
-def run_learn(prot_file: str, prot_index: str, traits_file: str, traits_index:str, excel_file: str, group: str):
+def run_learn_individual(prot_file: str, prot_index: str, traits_file: str, traits_index:str, excel_file: str, group: str):
+
     clinical_data = pd.read_csv(traits_file, index_col=traits_index)
     clinical_data = preprocess_nd(clinical_data)
     clinical_data = clinical_data.dropna(how='any')
@@ -58,8 +62,15 @@ def run_learn(prot_file: str, prot_index: str, traits_file: str, traits_index:st
     # nd_proteomics_data[["Group"]] = enc.fit_transform(nd_proteomics_data[["Group"]])
 
     # boxframe(nd_proteomics_data, 5, "/Users/frishman/Downloads/bx_gene.pdf")
+    X = proteomics_data[prot_columns]
+    y = proteomics_data[group]
+    Learn(X, y, "RandomForest")
 
-    Learn(proteomics_data, prot_columns, group, "RandomForest")
+def run_learn_combined(h5ad_file):
+    adata = sc.read_h5ad(h5ad_file)
+    X = pd.DataFrame(adata.X, columns=adata.var_names, index=adata.obs_names)
+    y = pd.DataFrame(adata.obs['diagnosis']).squeeze()
+    Learn(X, y, "RandomForest")
 
 
 def run_pca(prot: pd.DataFrame, clin: pd.DataFrame, pcatxt: str, pcapdf: str):
