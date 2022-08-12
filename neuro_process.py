@@ -1,5 +1,3 @@
-import sys
-
 import numpy as np
 import pandas as pd
 from pca import DoPCA
@@ -7,7 +5,6 @@ from plot import scatter_dict
 from libr import impscale
 from libr import dict_append
 from learn import Learn
-import anndata
 import scanpy as sc
 
 

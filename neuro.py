@@ -2,12 +2,12 @@
 from neuro_process import run_learn_individual
 from neuro_process import run_learn_combined
 
-# print("Dataset UPenn")
-# upenn_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/0.Traits.csv"
-# upenn_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
-# upenn_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/upenn_joint.xlsx"
-# run_learn_individual(upenn_proteomics_file, 'Unnamed: 0', upenn_traits_file, 'MaxQuant ID', upenn_excel_file, "Group")
-#
+print("Dataset UPenn")
+upenn_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/0.Traits.csv"
+upenn_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/UPenn_Multiple_Neurodegenerative_Diseases/Discovery_LFQ_Proteomics/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
+upenn_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/upenn_joint.xlsx"
+run_learn_individual(upenn_proteomics_file, 'Unnamed: 0', upenn_traits_file, 'MaxQuant ID', upenn_excel_file, "Group")
+
 # print("Dataset Mayo")
 # mayo_traits_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/0.Traits.csv"
 # mayo_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Mayo_Temporal_Cortex/data/2.unregressed_batch-corrected_LFQ_intensity.csv"
@@ -49,12 +49,12 @@ from neuro_process import run_learn_combined
 # consensus_proteomics_file = "/Users/frishman/Dropbox/Deeproad/data/johnson_20/Consensus/data/2.Minimally_regressed_Batch_and_Site-corrected_LFQ_intensity.csv"
 # consensus_excel_file = "/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/consensus_joint.xlsx"
 # run_learn_individual(consensus_proteomics_file, 'Unnamed: 0', consensus_traits_file, 'Unnamed: 0', consensus_excel_file, "Group")
-
-print("Dataset joined")
-run_learn_combined('/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/adata_combined_integrated_nor1_agewithoutgroup_sex_pmi_state_combat_del_CBD_ALSFTD.h5ad')
-
-
-
-
+#
+# print("Dataset combat")
+# run_learn_combined('/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/adata_combined_integrated_nor1_agewithoutgroup_sex_pmi_state_combat_del_CBD_ALSFTD.h5ad')
+#
+# print("Dataset desc")
+# run_learn_combined('/Users/frishman/Dropbox/Bioinformatics/projects/Neuro/adata_combined_integrated_nor1_agewithoutgroup_sex_pmi_state_desc_del_CBD_ALSFTD.h5ad')
+#
 
 
