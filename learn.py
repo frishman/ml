@@ -16,7 +16,7 @@ from sklearn.exceptions import ConvergenceWarning
 class Learn:
     def __init__(self, X, y, method) -> None:
         self.method = method
-        self.nsplits = 5
+        self.nsplits = 1
         self.split = StratifiedShuffleSplit(n_splits=self.nsplits, test_size=0.2, random_state=42)
         self.set_method()
         self.feature_names = list(X.columns)
@@ -58,7 +58,7 @@ class Learn:
     def opt_hyper(self, x_train, y_train):
 
         if self.method == "RandomForest":
-            n_iter = 100
+            n_iter = 10
             random_grid = {'n_estimators': [int(x) for x in np.linspace(start=20, stop=2000, num=15)],
                            'max_depth': [int(x) for x in np.linspace(start=1, stop=15, num=10)] + [None],
                            'min_samples_split': [2, 5, 10],

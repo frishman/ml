@@ -5,7 +5,6 @@ from plot import scatter_dict
 from libr import impscale
 from libr import dict_append
 from learn import Learn
-import scanpy as sc
 
 
 def preprocess_nd(df):
@@ -25,7 +24,7 @@ def preprocess_nd(df):
     return df
 
 
-def run_learn_individual(prot_file: str, prot_index: str, traits_file: str, traits_index:str, excel_file: str, group: str):
+def run_learn_individual(prot_file: str, prot_index: str, traits_file: str, traits_index:str, group: str):
 
     clinical_data = pd.read_csv(traits_file, index_col=traits_index)
     clinical_data = preprocess_nd(clinical_data)
@@ -46,7 +45,6 @@ def run_learn_individual(prot_file: str, prot_index: str, traits_file: str, trai
     proteomics_data = proteomics_data.T
     prot_columns = proteomics_data.columns
     joint = proteomics_data.join(clinical_data)
-    # joint.to_excel(excel_file)
 
     proteomics_data = proteomics_data.join(clinical_data[group])
 
