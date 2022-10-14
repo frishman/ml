@@ -64,6 +64,7 @@ class Learn:
                            'min_samples_split': [2, 5, 10],
                            'min_samples_leaf': [1, 2, 4],
                            'bootstrap': [True, False]}
+
         elif self.method == "SVM":
             n_iter = 100
             random_grid = {'C': [0.1, 1, 10, 100, 1000],
@@ -155,6 +156,9 @@ class Learn:
         protein_ids = np.array(self.feature_names)[importances_idx][-20:]
         print()
         for p in protein_ids:
+            print(p)
+            if type(p) is not str:
+                p = str(p)
             p = re.sub('[^\\|]*\\|', '', p)
             print("FEATURE " + p)
         print()
