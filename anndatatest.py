@@ -6,6 +6,7 @@ print(ad.__version__)
 
 counts = csr_matrix(np.random.poisson(1, size=(100, 2000)), dtype=np.float32)
 ar = np.random.poisson(1, size=(100, 2000))
+
 adata = ad.AnnData(ar)
 
 print(adata.n_obs)
