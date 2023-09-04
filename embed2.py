@@ -7,13 +7,14 @@ from tqdm import tqdm
 from Bio import SeqIO
 from transformers import T5Tokenizer, T5EncoderModel
 
+
 def preprocess_from_fasta(path):
     labels, seqs = [], []
     for record in SeqIO.parse(path, "fasta"):
         labels.append(record.id)
 
         seq = str(record.seq)[:1022]
-        seq = re.sub(r'[JUZOB\*]', 'X', seq)
+        seq = re.sub(r'[JUZOB*]', 'X', seq)
         seqs.append(' '.join(list(seq)))
 
     return labels, seqs
